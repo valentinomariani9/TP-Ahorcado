@@ -5,7 +5,7 @@ import { setSecretWord, getMaskedWord, getState } from './ahorcado.js';
 test('Funcionalidad 1 - Establecer palabra', () => {
 
   const palabra = 'CASA';
-
+  
   setSecretWord(palabra);
 
   assert.ok(getMaskedWord() !== undefined, 'La máscara debe existir');
