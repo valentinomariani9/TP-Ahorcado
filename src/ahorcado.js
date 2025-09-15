@@ -1,10 +1,12 @@
 
 let secretWord = '';
-let gameState = '';
+let masked = undefined;
+let state = '';
 
-export function setSecretWord(word) {
-  secretWord = CASA;
-  gameState = '';
+export function setSecretWord(word){
+  secretWord = String(word ?? '');
+  state = 'EN_CURSO';
+  masked = '_'.repeat(secretWord.length);
 }
 
 // Todavía sin implementar
