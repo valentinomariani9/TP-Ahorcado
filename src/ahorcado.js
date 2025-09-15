@@ -1,3 +1,4 @@
+
 let secretWord = '';
 let gameState = '';
 
