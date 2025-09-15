@@ -1,4 +1,3 @@
-
 let secretWord = '';
 let masked = undefined;
 let state = '';
