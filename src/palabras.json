@@ -1,0 +1,12 @@
+{
+  "es": {
+    "easy": ["gato", "casa", "lobo", "vaso", "hilo"],
+    "medium": ["melon", "perro", "fruta", "llave", "lemur"],
+    "hard": ["manzana", "futbol", "pelota", "castor", "whisky"]
+  },
+  "en": {
+    "easy": ["door", "land", "cube", "bear", "head"],
+    "medium": ["phone", "river", "earth", "crazy", "table"],
+    "hard": ["jungle", "rocket", "silver", "circle", "system"]
+  }
+}
