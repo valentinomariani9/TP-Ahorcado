@@ -28,3 +28,14 @@ def test_seleccionar_palabra_no_nula():
     diccionario = cargar_palabras()
     palabra = seleccionar_palabra(diccionario, "es", "easy")
     assert palabra is not None and palabra != ""
+
+# Sprint 3
+def test_ocultar_palabra_inicial():
+    palabra = "PERRO"
+    oculto = ocultar_palabra(palabra, [])
+    assert oculto == "_____"
+
+def test_ocultar_palabra_con_aciertos():
+    palabra = "PERRO"
+    oculto = ocultar_palabra(palabra, ["R"])
+    assert oculto == "__RR_"
