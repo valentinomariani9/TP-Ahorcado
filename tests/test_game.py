@@ -39,3 +39,59 @@ def test_ocultar_palabra_con_aciertos():
     palabra = "PERRO"
     oculto = ocultar_palabra(palabra, ["R"])
     assert oculto == "__RR_"
+
+#Sprint 4
+def test_validar_letra_valida():
+    letras_usadas = set()
+    ok, letra = validar_letra("a", letras_usadas)
+    assert ok is True
+    assert letra == "A"
+
+def test_validar_letra_invalida():
+    letras_usadas = set()
+    ok, mensaje = validar_letra("1", letras_usadas)
+    assert ok is False
+    assert mensaje == "❌ Entrada inválida, ingresa solo una letra"
+
+def test_procesar_intento_acierto():
+    palabra = "GATO"
+    letras_usadas = set()
+    historial = []
+    vidas = 5
+
+    vidas, progreso, terminado, mensaje = procesar_intento(
+        palabra,    # palabra secreta
+        "A",        # letra que intenta
+        letras_usadas,
+        vidas,
+        historial
+    )
+
+    assert "A" in progreso
+    assert terminado is False
+    assert vidas == 5
+
+def test_procesar_intento_fallo():
+    palabra = "GATO"
+    oculto = "____"
+    letras_usadas = set()
+    oculto, vidas, estado = procesar_intento("Z", palabra, oculto, letras_usadas, 5)
+    assert oculto == "____"
+    assert vidas == 4
+    assert estado == "FALLO"
+
+def test_procesar_intento_victoria():
+    palabra = "SOL"
+    oculto = "S_L"
+    letras_usadas = {"S", "L"}
+    oculto, vidas, estado = procesar_intento("O", palabra, oculto, letras_usadas, 5)
+    assert oculto == "SOL"
+    assert estado == "VICTORIA"
+
+def test_procesar_intento_derrota():
+    palabra = "SOL"
+    oculto = "___"
+    letras_usadas = set()
+    oculto, vidas, estado = procesar_intento("X", palabra, oculto, letras_usadas, 1)
+    assert vidas == 0
+    assert estado == "DERROTA"

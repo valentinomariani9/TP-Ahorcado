@@ -16,7 +16,7 @@ def jugar():
 
     # Inicializar variables
     vidas = 6
-    letras_adivinadas = []
+    letras_adivinadas = set()
     historial = []
 
     print(f"\nDificultad elegida: {dificultad}")
