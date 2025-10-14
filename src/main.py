@@ -44,11 +44,17 @@ def jugar():
     letras_adivinadas = set()
     historial = []
 
-    print("\nPalabra secreta:", ocultar_palabra(palabra, letras_adivinadas))
+    if idioma == "es":
+        print("\nPalabra secreta:", ocultar_palabra(palabra, letras_adivinadas))
+    else:
+        print("\nSecret word:", ocultar_palabra(palabra, letras_adivinadas))
 
     # Bucle principal
     while True:
-        letra_input = input("\nIngresa una letra: ")
+        if idioma == "es":
+            letra_input = input("\nIngresa una letra: ")
+        else:
+            letra_input = input("\nEnter a letter: ")
         valido, resultado = validar_letra(letra_input, letras_adivinadas, idioma)
 
         if not valido:
