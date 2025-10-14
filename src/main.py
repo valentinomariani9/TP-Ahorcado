@@ -8,8 +8,20 @@ def jugar():
     diccionario = cargar_palabras()
 
     # 2. Selección de idioma y dificultad
-    idioma = input("Elige idioma (es/en): ").lower()
-    dificultad = input("Elige dificultad (easy/medium/hard): ").lower()
+    idioma = int(input("Elige el idioma:\n1. Español 🇦🇷\n2. English 🇬🇧\n"))
+    while (idioma > 2 or idioma < 1):
+        idioma = int(input("Por favor ingresá una opción correcta.\n"))
+    
+    if idioma == 1:
+        dificultad = int(input("\nElige la dificultad:\n1. Facil\n2. Medio\n3. Dificil\n"))
+    else:
+        dificultad = int(input("\nChoose the difficulty:\n1. Easy\n2. Medium\n3. Hard\n"))
+    
+    while (dificultad > 3 or dificultad < 1):
+        if idioma == 1:
+            idioma = int(input("Por favor ingresá una opción correcta.\n"))
+        else:
+            idioma = int(input("Please enter a correct option.\n"))
 
     # 3. Selección de palabra secreta
     palabra = seleccionar_palabra(diccionario, idioma, dificultad)
