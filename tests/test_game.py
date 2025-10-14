@@ -40,7 +40,7 @@ def test_ocultar_palabra_con_aciertos():
     oculto = ocultar_palabra(palabra, ["R"])
     assert oculto == "__RR_"
 
-#Sprint 4
+# Sprint 4
 def test_validar_letra_valida():
     letras_usadas = set()
     ok, letra = validar_letra("a", letras_usadas)
@@ -51,7 +51,7 @@ def test_validar_letra_invalida():
     letras_usadas = set()
     ok, mensaje = validar_letra("1", letras_usadas)
     assert ok is False
-    assert mensaje == "❌ Entrada inválida, ingresa solo una letra"
+    assert mensaje == "⚠️ Ingresá solo una letra."
 
 def test_procesar_intento_acierto():
     palabra = "GATO"
@@ -64,34 +64,63 @@ def test_procesar_intento_acierto():
         "A",        # letra que intenta
         letras_usadas,
         vidas,
-        historial
+        historial,
+        idioma="es"
     )
 
     assert "A" in progreso
     assert terminado is False
     assert vidas == 5
+    assert mensaje == "✅ ¡Acierto!"
 
 def test_procesar_intento_fallo():
     palabra = "GATO"
-    oculto = "____"
     letras_usadas = set()
-    oculto, vidas, estado = procesar_intento("Z", palabra, oculto, letras_usadas, 5)
-    assert oculto == "____"
+    historial = []
+    vidas, progreso, terminado, mensaje = procesar_intento(
+        palabra,
+        "Z",
+        letras_usadas,
+        5,
+        historial,
+        idioma="es"
+    )
+
+    assert progreso == "____"
     assert vidas == 4
-    assert estado == "FALLO"
+    assert terminado is False
+    assert "Fallo" in mensaje
 
 def test_procesar_intento_victoria():
     palabra = "SOL"
-    oculto = "S_L"
     letras_usadas = {"S", "L"}
-    oculto, vidas, estado = procesar_intento("O", palabra, oculto, letras_usadas, 5)
-    assert oculto == "SOL"
-    assert estado == "VICTORIA"
+    historial = []
+    vidas, progreso, terminado, mensaje = procesar_intento(
+        palabra,
+        "O",
+        letras_usadas,
+        5,
+        historial,
+        idioma="es"
+    )
+
+    assert progreso == "SOL"
+    assert terminado is True
+    assert "Acierto" in mensaje or "Well done" in mensaje
 
 def test_procesar_intento_derrota():
     palabra = "SOL"
-    oculto = "___"
     letras_usadas = set()
-    oculto, vidas, estado = procesar_intento("X", palabra, oculto, letras_usadas, 1)
+    historial = []
+    vidas, progreso, terminado, mensaje = procesar_intento(
+        palabra,
+        "X",
+        letras_usadas,
+        1,
+        historial,
+        idioma="es"
+    )
+
     assert vidas == 0
-    assert estado == "DERROTA"
+    assert terminado is True
+    assert "vidas" in mensaje or "lives" in mensaje

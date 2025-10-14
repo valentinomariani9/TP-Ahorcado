@@ -2,7 +2,7 @@ from utils import cargar_palabras, validar_letra
 from game import seleccionar_palabra, ocultar_palabra, procesar_intento
 
 def jugar():
-    print("🎮 Bienvenido a Ahorcado Flash 🎮")
+    print("\n\n🎮 Bienvenido a Ahorcado Flash 🎮")
 
     # 1. Cargar diccionario de palabras
     diccionario = cargar_palabras()
@@ -23,7 +23,20 @@ def jugar():
         else:
             idioma = int(input("Please enter a correct option.\n"))
 
-    # 3. Selección de palabra secreta
+    # 3. Mapeo de idioma y dificultad
+    if idioma == 1:
+        idioma = "es"
+    else:
+        idioma = "en"
+
+    if dificultad == 1:
+        dificultad = "easy"
+    elif dificultad == 2:
+        dificultad = "medium"
+    else:
+        dificultad = "hard"
+
+    # 4. Selección de palabra secreta
     palabra = seleccionar_palabra(diccionario, idioma, dificultad)
 
     # Inicializar variables
@@ -31,13 +44,12 @@ def jugar():
     letras_adivinadas = set()
     historial = []
 
-    print(f"\nDificultad elegida: {dificultad}")
-    print("Palabra secreta:", ocultar_palabra(palabra, letras_adivinadas))
+    print("\nPalabra secreta:", ocultar_palabra(palabra, letras_adivinadas))
 
     # Bucle principal
     while True:
         letra_input = input("\nIngresa una letra: ")
-        valido, resultado = validar_letra(letra_input, letras_adivinadas)
+        valido, resultado = validar_letra(letra_input, letras_adivinadas, idioma)
 
         if not valido:
             print(resultado)
@@ -45,16 +57,28 @@ def jugar():
 
         letra = resultado
         vidas, progreso, fin, mensaje = procesar_intento(
-            palabra, letra, letras_adivinadas, vidas, historial
+            palabra, letra, letras_adivinadas, vidas, historial, idioma
         )
 
         print(mensaje)
-        print("Progreso:", progreso)
+        if idioma == "es":
+            print("Palabra secreta:", progreso)
+        else:
+            print("Secret word:", progreso)
 
         if fin:
-            print("Historial de intentos:", historial)
-            break
+            if vidas > 0:
+                if idioma == "es":
+                    print("\n🏆 ¡Ganaste! Adivinaste la palabra correctamente. 🏆\n")
+                else:
+                    print("\n🏆 You won! You guessed the word correctly. 🏆\n")
+            else:
+                if idioma == "es":
+                    print(f"\n💀 Perdiste. La palabra secreta era: {palabra.upper()}\n")
+                else:
+                    print(f"\n💀 You lost. The secret word was: {palabra.upper()}\n")
 
+            break
 
 if __name__ == "__main__":
     jugar()

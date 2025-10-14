@@ -22,10 +22,16 @@ def validar_lista_palabras(lista):
             return False, f"❌ La palabra '{palabra}' contiene caracteres inválidos"
     return True, "✅ Lista válida"
 
-def validar_letra(letra, letras_usadas):
+def validar_letra(letra, letras_usadas, idioma="es"):
     letra = letra.upper()
     if len(letra) != 1 or not letra.isalpha():
-        return False, "❌ Entrada inválida, ingresa solo una letra"
+        if idioma == "es":
+            return False, "⚠️ Ingresá solo una letra."
+        else:
+            return False, "⚠️ Enter only one letter."
     if letra in letras_usadas:
-        return False, "⚠️ Ya ingresaste esa letra"
+        if idioma == "es":
+            return False, "⚠️ Ya usaste esa letra."
+        else:
+            return False, "⚠️ You already used that letter."
     return True, letra
