@@ -1,5 +1,5 @@
-from utils import cargar_palabras, validar_letra
-from game import seleccionar_palabra, ocultar_palabra, procesar_intento
+from .utils import cargar_palabras, validar_letra
+from .game import seleccionar_palabra, ocultar_palabra, procesar_intento
 
 def jugar():
     print("\n\n🎮 Bienvenido a Ahorcado Flash 🎮")
