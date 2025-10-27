@@ -30,20 +30,20 @@ pip install -r requirements.txt
 python3 -m src.main
 ```
 
-## 🧪 Testing
-# Tests Unitarios
+# 🧪 Testing
+## Tests Unitarios
 Ejecutan pruebas sobre las funciones principales del juego:
 ```bash
 python3 -m pytest -v
 ```
 
-# Tests de UI
+## Tests de UI
 Simulan partidas completas automáticamente:
 ```bash
 python3 -m pytest -v tests/test_ui.py
 ```
 
-# Tests ATDD (con Behave)
+## Tests ATDD (con Behave)
 Implementados con lenguaje Gherkin, permiten describir escenarios en lenguaje natural:
 ```bash
 python3 -m behave
