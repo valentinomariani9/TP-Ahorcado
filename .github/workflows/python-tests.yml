@@ -1,4 +1,4 @@
-name: 🧪 Test Ahorcado Flash
+name: 🧪 Test y Build Ahorcado Flash
 
 on:
   push:
@@ -7,8 +7,9 @@ on:
     branches: [ "main" ]
 
 jobs:
-  test:
+  build-and-test:
     runs-on: ubuntu-latest
+
     steps:
     - name: 📦 Clonar el repositorio
       uses: actions/checkout@v4
@@ -23,16 +24,26 @@ jobs:
         python -m pip install --upgrade pip
         pip install pytest behave pyinstaller
 
-    - name: 🧪 Ejecutar tests
+    - name: 🧪 Ejecutar tests unitarios (pytest)
       run: |
-        pytest -v
-        behave
+        mkdir -p reports
+        pytest -v --junitxml=reports/pytest-report.xml
+
+    - name: 🧩 Ejecutar tests ATDD (behave)
+      run: |
+        behave --format pretty --outfile reports/behave-report.txt
 
     - name: ⚙️ Generar ejecutable (.exe)
       run: |
         pyinstaller --onefile src/main.py --name AhorcadoFlash
 
-    - name: 📤 Subir ejecutable como artefacto
+    - name: 📤 Subir reportes de testing
+      uses: actions/upload-artifact@v4
+      with:
+        name: reportes-tests
+        path: reports/
+
+    - name: 📤 Subir ejecutable (.exe)
       uses: actions/upload-artifact@v4
       with:
         name: AhorcadoFlash-exe
