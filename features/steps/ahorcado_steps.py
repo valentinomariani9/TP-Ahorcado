@@ -49,8 +49,8 @@ def step_iniciado(context):
 
 @given('la palabra secreta es "CASA"')
 def step_palabra(context):
-    import src.game as game
-    game.seleccionar_palabra = lambda *args, **kwargs: "CASA"
+    import src.main 
+    src.main.seleccionar_palabra = lambda *args, **kwargs: "CASA"
 
 
 @when('el jugador ingresa las letras "C", "A" y "S"')
