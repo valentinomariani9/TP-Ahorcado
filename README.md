@@ -27,7 +27,7 @@ pip install -r requirements.txt
 
 4. Ejecutar el juego desde la raíz del proyecto:
 ```bash
-python3 -m src.main
+python3 python3 -m streamlit run app.py
 ```
 
 # 🧪 Testing
