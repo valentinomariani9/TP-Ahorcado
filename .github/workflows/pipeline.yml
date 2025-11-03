@@ -1,4 +1,4 @@
-name: 🧪 Test y Build Ahorcado Flash
+name: Pipeline
 
 on:
   push:
@@ -11,40 +11,51 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: 📦 Clonar el repositorio
+    - name: Clonar el repositorio
       uses: actions/checkout@v4
 
-    - name: 🐍 Configurar Python
+    - name: Configurar Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.10'
 
-    - name: 📚 Instalar dependencias
+    - name: Instalar dependencias
       run: |
         python -m pip install --upgrade pip
         pip install pytest behave pyinstaller
 
-    - name: 🧪 Ejecutar tests unitarios (pytest)
+    - name: Ejecutar tests unitarios (pytest)
       run: |
         mkdir -p reports
         pytest -v --junitxml=reports/pytest-report.xml
 
-    - name: 🧩 Ejecutar tests ATDD (behave)
+    - name: Ejecutar tests ATDD (behave)
       run: |
         behave --format pretty --outfile reports/behave-report.txt
 
-    - name: ⚙️ Generar ejecutable (.exe)
+    - name: Generar ejecutable (.exe)
       run: |
         pyinstaller --onefile src/main.py --name AhorcadoFlash
 
-    - name: 📤 Subir reportes de testing
+    - name: Subir reportes de testing
       uses: actions/upload-artifact@v4
       with:
         name: reportes-tests
         path: reports/
 
-    - name: 📤 Subir ejecutable (.exe)
+    - name: Subir ejecutable (.exe)
       uses: actions/upload-artifact@v4
       with:
         name: AhorcadoFlash-exe
         path: dist/AhorcadoFlash*
+  
+  deploy:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && success()
+
+    steps:
+    - name: 🚀 Desplegar en Streamlit Cloud
+      run: |
+        echo "Streamlit Cloud detectará automáticamente los cambios en la rama main."
+        echo "No es necesario subir manualmente el código: el deploy se hace en automático."

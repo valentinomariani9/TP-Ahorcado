@@ -37,7 +37,7 @@ def procesar_intento_web(letra_input):
 
 # --- Flujo Principal de la Aplicación ---
 
-st.title("🎮 Ahorcado Flash (Web)")
+st.title("🎮 Ahorcado Flash – Grupo 8 🎮")
 
 # ESTADO 1: PANTALLA DE CONFIGURACIÓN
 # Si 'partida_iniciada' no existe en el estado, mostramos la configuración.
