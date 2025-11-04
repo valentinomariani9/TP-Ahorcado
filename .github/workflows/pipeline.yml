@@ -1,10 +1,10 @@
-name: Pipeline
+name: 🚀 Pipeline Ahorcado Flash
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "develop" ]   # trabaja en develop
   pull_request:
-    branches: [ "main" ]
+    branches: [ "develop" ]
 
 jobs:
   build-and-test:
@@ -22,7 +22,7 @@ jobs:
     - name: Instalar dependencias
       run: |
         python -m pip install --upgrade pip
-        pip install pytest behave pyinstaller
+        pip install pytest behave
 
     - name: Ejecutar tests unitarios (pytest)
       run: |
@@ -33,29 +33,33 @@ jobs:
       run: |
         behave --format pretty --outfile reports/behave-report.txt
 
-    - name: Generar ejecutable (.exe)
-      run: |
-        pyinstaller --onefile src/main.py --name AhorcadoFlash
-
     - name: Subir reportes de testing
       uses: actions/upload-artifact@v4
       with:
         name: reportes-tests
         path: reports/
 
-    - name: Subir ejecutable (.exe)
-      uses: actions/upload-artifact@v4
-      with:
-        name: AhorcadoFlash-exe
-        path: dist/AhorcadoFlash*
-  
-  deploy:
+  merge-to-main:
     needs: build-and-test
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && success()
+    if: success() && github.ref == 'refs/heads/develop'
 
     steps:
-    - name: 🚀 Desplegar en Streamlit Cloud
+    - name: Merge develop → main
+      uses: devmasx/merge-branch@v1.4.0
+      with:
+        type: now
+        from_branch: develop
+        target_branch: main
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+
+  deploy:
+    needs: merge-to-main
+    runs-on: ubuntu-latest
+    if: success()
+
+    steps:
+    - name: Desplegar en Streamlit Cloud
       run: |
-        echo "Streamlit Cloud detectará automáticamente los cambios en la rama main."
-        echo "No es necesario subir manualmente el código: el deploy se hace en automático."
+        echo "Código fusionado en main."
+        echo "Streamlit Cloud detectará automáticamente los cambios y redeployará la app."
