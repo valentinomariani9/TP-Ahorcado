@@ -27,6 +27,9 @@ def step_iniciar_juego(context):
         options.add_argument("--disable-extensions")
         options.add_argument("--window-size=1920,1080")
         options.add_argument("--remote-debugging-port=9222")
+        options.add_argument("--disable-software-rasterizer")
+        options.add_argument("--disable-setuid-sandbox")     
+        options.add_argument("--single-process")             
     else:
         print("Modo local → ejecutando con interfaz visible.")
         options.add_argument("--start-maximized")

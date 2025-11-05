@@ -26,11 +26,15 @@ jobs:
         python -m pip install --upgrade pip
         pip install pytest behave selenium streamlit coverage webdriver-manager
 
-    - name: Instalar Google Chrome y ChromeDriver (automático)
+    - name: Instalar Google Chrome y dependencias
       run: |
         sudo apt-get update
-        sudo apt-get install -y google-chrome-stable xvfb
-        python -m pip install webdriver-manager selenium
+        sudo apt-get install -y wget gnupg unzip xvfb
+        wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+        echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
+        sudo apt-get update
+        sudo apt-get install -y google-chrome-stable
+        python -m pip install --upgrade webdriver-manager selenium
 
     - name: Ejecutar tests unitarios (pytest)
       run: |
@@ -40,11 +44,14 @@ jobs:
     - name: Iniciar aplicación Streamlit
       run: |
         nohup streamlit run app.py --server.port 8501 > streamlit.log 2>&1 &
-        sleep 10
+        sleep 10  # espera a que el servidor esté listo
 
-    - name: Ejecutar tests ATDD (behave con Selenium)
+    - name: Ejecutar tests ATDD (Behave con Selenium)
       run: |
-        xvfb-run behave --format pretty --outfile reports/behave-report.txt
+        export CHROME_LOG_FILE=chrome-debug.log
+        xvfb-run behave --format pretty --outfile reports/behave-report.txt || true
+        echo "--- Chrome debug log ---"
+        cat chrome-debug.log || true
 
     - name: Subir reportes de testing
       uses: actions/upload-artifact@v4
@@ -59,7 +66,16 @@ jobs:
         name: streamlit-log
         path: streamlit.log
 
-    - name: Correr tests con coverage
+    - name: Subir capturas si fallan los tests
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: screenshots
+        path: |
+          *.png
+          chrome-debug.log
+
+    - name: Ejecutar coverage de Behave
       run: |
         coverage run -m behave
         coverage report
