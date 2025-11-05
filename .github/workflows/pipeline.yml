@@ -36,10 +36,12 @@ jobs:
         sudo apt-get install -y google-chrome-stable
         python -m pip install --upgrade webdriver-manager selenium
 
-    - name: Ejecutar tests unitarios (pytest)
+    - name: Ejecutar tests unitarios con coverage (pytest)
       run: |
         mkdir -p reports
-        pytest -v --junitxml=reports/pytest-report.xml
+        coverage run -m pytest -v --junitxml=reports/pytest-report.xml
+        coverage report
+        coverage xml -o reports/coverage.xml
 
     - name: Iniciar aplicación Streamlit
       run: |
@@ -74,11 +76,6 @@ jobs:
         path: |
           *.png
           chrome-debug.log
-
-    - name: Ejecutar coverage de Behave
-      run: |
-        coverage run -m behave
-        coverage report
 
   merge-to-main:
     needs: build-and-test
