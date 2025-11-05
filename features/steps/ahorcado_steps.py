@@ -27,18 +27,18 @@ def step_iniciar_juego(context):
     wait = WebDriverWait(context.driver, 10)
 
     # 🔹 Esperar el botón "Comenzar Juego" y hacer clic
-    print("⏳ Esperando botón 'Comenzar juego'...")
+    print("Esperando botón 'Comenzar juego'...")
     boton_comenzar = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(., 'Comenzar Juego')]")))
     boton_comenzar.click()
 
-    print("🎮 Juego iniciado!")
+    print("Juego iniciado!")
 
 
 @given('la palabra secreta es "{palabra}"')
 def step_set_palabra(context, palabra):
     # Nota: la palabra se pasa por la URL, así que no se cambia en el DOM
     context.palabra = palabra.upper()
-    print(f"📖 Palabra secreta configurada en contexto: {context.palabra}")
+    print(f"Palabra secreta configurada en contexto: {context.palabra}")
 
 
 @when('el jugador ingresa letras correctas sin errores')
@@ -62,7 +62,7 @@ def step_letras_correctas(context):
 
 @then('el sistema muestra "{mensaje}"')
 def step_verificar_mensaje(context, mensaje):
-    print(f"🔍 Buscando mensaje final: {mensaje}")
+    print(f"Buscando mensaje final: {mensaje}")
     wait = WebDriverWait(context.driver, 20)
 
     try:
@@ -83,6 +83,25 @@ def step_verificar_mensaje(context, mensaje):
         context.driver.save_screenshot("error_final.png")
         raise e
 
+@when("el jugador ingresa letras correctas pero con errores")
+def step_letras_correctas_errores(context):
+    wait = WebDriverWait(context.driver, 10)
+    letras_correctas_errores = ["C", "Q", "A", "Y", "T", "S"]
+
+    print("Ingresando letras...")
+
+    for letra in letras_correctas_errores:
+        input_letra = wait.until(
+            EC.presence_of_element_located((By.XPATH, "//input[@type='text']"))
+        )
+        input_letra.send_keys(letra)
+        time.sleep(1)
+        boton_adivinar = wait.until(
+            EC.element_to_be_clickable((By.XPATH, "//button[contains(., 'Adivinar')]"))
+        )
+        boton_adivinar.click()
+        time.sleep(1)
+
 @when("el jugador ingresa letras incorrectas hasta quedarse sin vidas")
 def step_letras_incorrectas(context):
     wait = WebDriverWait(context.driver, 10)
@@ -91,6 +110,25 @@ def step_letras_incorrectas(context):
     print("💣 Ingresando letras incorrectas...")
 
     for letra in letras_incorrectas:
+        input_letra = wait.until(
+            EC.presence_of_element_located((By.XPATH, "//input[@type='text']"))
+        )
+        input_letra.send_keys(letra)
+        time.sleep(1)
+        boton_adivinar = wait.until(
+            EC.element_to_be_clickable((By.XPATH, "//button[contains(., 'Adivinar')]"))
+        )
+        boton_adivinar.click()
+        time.sleep(1)
+
+@when("el jugador ingresa letras incorrectas y correctas hasta quedarse sin vidas")
+def step_letras_incorrectas_aciertos(context):
+    wait = WebDriverWait(context.driver, 10)
+    letras_incorrectas_aciertos = ["Z", "A", "Q", "W", "Y", "T", "S", "X"]
+
+    print("💣 Ingresando letras incorrectas...")
+
+    for letra in letras_incorrectas_aciertos:
         input_letra = wait.until(
             EC.presence_of_element_located((By.XPATH, "//input[@type='text']"))
         )
