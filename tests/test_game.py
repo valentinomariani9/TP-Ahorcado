@@ -33,7 +33,7 @@ def test_seleccionar_palabra_no_nula():
 def test_ocultar_palabra_inicial():
     palabra = "PERRO"
     oculto = ocultar_palabra(palabra, [])
-    assert oculto == "______"
+    assert oculto == "_____"
 
 def test_ocultar_palabra_con_aciertos():
     palabra = "PERRO"
