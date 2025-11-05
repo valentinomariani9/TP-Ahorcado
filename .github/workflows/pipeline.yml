@@ -9,6 +9,8 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    env:
+      CI: true
 
     steps:
     - name: Clonar el repositorio
@@ -24,16 +26,11 @@ jobs:
         python -m pip install --upgrade pip
         pip install pytest behave selenium streamlit coverage webdriver-manager
 
-    - name: Instalar Google Chrome y ChromeDriver
+    - name: Instalar Google Chrome y ChromeDriver (automático)
       run: |
         sudo apt-get update
-        sudo apt-get install -y wget unzip xvfb
-        wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-        sudo dpkg -i google-chrome-stable_current_amd64.deb || sudo apt-get -f install -y
-        CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+' | head -1)
-        wget -N https://storage.googleapis.com/chrome-for-testing-public/$CHROME_VERSION/linux64/chromedriver-linux64.zip || true
-        unzip -o chromedriver-linux64.zip -d /usr/local/bin/
-        chmod +x /usr/local/bin/chromedriver
+        sudo apt-get install -y google-chrome-stable xvfb
+        python -m pip install webdriver-manager selenium
 
     - name: Ejecutar tests unitarios (pytest)
       run: |
@@ -43,7 +40,7 @@ jobs:
     - name: Iniciar aplicación Streamlit
       run: |
         nohup streamlit run app.py --server.port 8501 > streamlit.log 2>&1 &
-        sleep 10  # darle tiempo a iniciar
+        sleep 10
 
     - name: Ejecutar tests ATDD (behave con Selenium)
       run: |

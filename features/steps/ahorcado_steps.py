@@ -1,45 +1,55 @@
-from behave import given, when, then
+import os
+import time
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.keys import Keys
-import time
+from webdriver_manager.chrome import ChromeDriverManager
+from behave import given
 
-
-# --- CONFIGURACIÓN DEL JUEGO WEB ---
-URL_JUEGO = "http://localhost:8501?test_word=CASA"  # 👈 fuerza palabra para el test
+URL_JUEGO = "http://localhost:8501?test_word=CASA"
 
 
 @given("que el juego está iniciado")
 def step_iniciar_juego(context):
     print("🚀 Iniciando navegador y abriendo el juego...")
 
-    options = webdriver.ChromeOptions()
-    options.add_argument("--start-maximized")
-    options.add_argument("--disable-gpu")
-    options.add_argument("--disable-infobars")
-    options.add_argument("--disable-extensions")
+    options = Options()
 
-    context.driver = webdriver.Chrome(options=options)
+    if os.getenv("CI", "false") == "true":
+        print("🧪 Modo CI detectado → ejecutando en headless.")
+        options.add_argument("--headless=new")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--disable-gpu")
+        options.add_argument("--disable-extensions")
+        options.add_argument("--window-size=1920,1080")
+        options.add_argument("--remote-debugging-port=9222")
+    else:
+        print("Modo local → ejecutando con interfaz visible.")
+        options.add_argument("--start-maximized")
+
+    service = Service(ChromeDriverManager().install())
+    context.driver = webdriver.Chrome(service=service, options=options)
+
+    print(f"Abriendo {URL_JUEGO}")
     context.driver.get(URL_JUEGO)
 
-    wait = WebDriverWait(context.driver, 10)
-
-    # 🔹 Esperar el botón "Comenzar Juego" y hacer clic
-    print("Esperando botón 'Comenzar juego'...")
-    boton_comenzar = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(., 'Comenzar Juego')]")))
+    wait = WebDriverWait(context.driver, 15)
+    boton_comenzar = wait.until(
+        EC.element_to_be_clickable((By.XPATH, "//button[contains(., 'Comenzar Juego')]"))
+    )
     boton_comenzar.click()
 
-    print("Juego iniciado!")
+    print("Juego iniciado correctamente.")
 
 
 @given('la palabra secreta es "{palabra}"')
 def step_set_palabra(context, palabra):
-    # Nota: la palabra se pasa por la URL, así que no se cambia en el DOM
     context.palabra = palabra.upper()
     print(f"Palabra secreta configurada en contexto: {context.palabra}")
-
 
 @when('el jugador ingresa letras correctas sin errores')
 def step_letras_correctas(context):
