@@ -40,7 +40,7 @@ def procesar_intento_web(letra_input):
 
 # --- Flujo Principal de la Aplicación ---
 
-st.title("🎮 Ahorcado Flash 1 🎮")
+st.title("🎮 Ahorcado Flash 🎮")
 
 # ESTADO 1: PANTALLA DE CONFIGURACIÓN
 if 'partida_iniciada' not in st.session_state:
